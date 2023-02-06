@@ -1,0 +1,21 @@
+version: '3.8'
+
+services: 
+  localstack: 
+    container_name: o2-lambda-local
+    image: docker.io/localstack/localstack
+
+    environment:
+      - EDGE_PORT=4566
+      - LAMBDA_EXECUTOR=local
+      - LAMBDA_REMOTE_DOCKER=0
+      - SERVICES=lambda,cloudformation,s3,sts,iam,apigateway,ecr
+      - DEBUG=0
+      - BUCKET_MARKER_LOCAL=hot-reload
+    ports:
+      - "127.0.0.1:4510-4559:4510-4559"  # external service port range
+      - "127.0.0.1:4566:4566"            # LocalStack Edge Proxy
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - '/Users/leonardoperez/Workspace/go-aws-lambda-locally/bin/hello:/Users/leonardoperez/Workspace/go-aws-lambda-locally/bin/hello'

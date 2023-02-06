@@ -1,0 +1,36 @@
+service: go-aws-lambda-locally
+
+provider: 
+  name: aws
+  runtime: go1.x
+  region: us-east-1
+  stage: local
+
+plugins:
+  - serverless-localstack
+
+package:
+  individually: true
+
+custom: 
+  localstack:
+    debug: true
+    edgePort: 4566
+    host: http://localhost
+    autostart: false
+    stages: [local]
+    lambda:
+      mountCode: true
+
+
+functions:
+  hello:
+    handler: bin/hello
+    events: 
+    - http: 
+        path: hello
+        method: get
+        cors: true
+
+resources:
+  Resources:
